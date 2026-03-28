@@ -76,6 +76,3 @@ cd the-watcher
 
 # Installation steps will be added as development progresses
 ```
-
-2. Add a logo or badge section?
-3. Create a separate template for the GitHub Project board setup?
