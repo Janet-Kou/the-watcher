@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.contrib.auth.models import User
 from django.db.models import Avg
+from django.conf import settings
 import requests
 import os
 from .models import WatchlistItem, UserReview
@@ -12,10 +13,12 @@ from .serializers import (
     WatchlistItemSerializer, UserReviewSerializer
 )
 
+TMDB_API_KEY= "1664d90cf01e2096cc12e14b3a7a7623"
+
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
     permission_classes = [AllowAny]
-    serializer_class = RegisterSerializer
+    serializer_class = UserSerializer
 
 class UserProfileView(generics.RetrieveAPIView):
     permission_classes = [IsAuthenticated]
@@ -25,31 +28,18 @@ class UserProfileView(generics.RetrieveAPIView):
         return self.request.user
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
+@permission_classes([AllowAny])
 def search_movies(request):
     """Search movies from TMDB API"""
-    query = request.query_params.get('q', '')
-    genre = request.query_params.get('genre', '')
-    year = request.query_params.get('year', '')
+    query = request.query_params.get('query')
     
     if not query:
         return Response({'error': 'Search query required'}, status=400)
     
     tmdb_key = os.getenv('TMDB_API_KEY')
-    url = 'https://api.themoviedb.org/3/search/movie'
-    params = {
-        'api_key': tmdb_key,
-        'query': query,
-        'language': 'en-US',
-        'page': 1
-    }
-    
-    if genre:
-        params['with_genres'] = genre
-    if year:
-        params['primary_release_year'] = year
-    
-    response = requests.get(url, params=params)
+
+    url = f"https://api.themoviedb.org/3/search/movie?api_key={TMDB_API_KEY}&query={query}"
+    response = requests.get(url)
     
     if response.status_code == 200:
         return Response(response.json())

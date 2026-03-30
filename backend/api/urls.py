@@ -1,11 +1,13 @@
 from django.urls import path
-from . import views
+from .views import RegisterView, search_movies
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
 
 urlpatterns = [
-    path('register/', views.RegisterView.as_view(), name='register'),
-    path('profile/', views.UserProfileView.as_view(), name='profile'),
-    path('search/', views.search_movies, name='search'),
-    path('watchlist/', views.watchlist, name='watchlist'),
-    path('watchlist/<int:pk>/', views.watchlist_detail, name='watchlist-detail'),
-    path('reviews/<str:movie_id>/', views.reviews, name='reviews'),
+    path('register/', RegisterView.as_view(), name='auth_register'),
+    path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('search/', search_movies, name='movie_search'),
 ]

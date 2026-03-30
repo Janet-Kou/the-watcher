@@ -1,6 +1,10 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import './App.css';
+import Register from './components/Register';
+import Login from './components/Login';
+import MovieSearch from './components/MovieSearch';
+import MovieDetails from './components/MovieDetails';
 
 function App() {
   return (
@@ -17,9 +21,11 @@ function App() {
 
         <div style={{ padding: '20px' }}>
           <Routes>
-            <Route path="/" element={<h2>Movie Search coming soon...</h2>} />
-            <Route path="/login" element={<h2>Login Page coming soon...</h2>} />
             <Route path="/watchlist" element={<h2>Your Watchlist coming soon...</h2>} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/" element={<MovieSearch />} />
+            <Route path="/movie/:id" element={<MovieDetails />} />
           </Routes>
         </div>
       </div>
