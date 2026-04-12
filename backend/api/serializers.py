@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from .models import WatchlistItem, UserReview
+from .models import WatchlistItem
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -30,11 +30,15 @@ class RegisterSerializer(serializers.ModelSerializer):
 class WatchlistItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = WatchlistItem
-        fields = ['id', 'movie_id', 'movie_title', 'poster_path', 'status', 'user_rating', 'review', 'added_at']
+        fields = ['id', 'movie_id', 'title', 'poster_path', 'status', 'rating', 'review']
+        
+    def create(self, validated_data):
+        # The user is passed in from the view, not the request body
+        return WatchlistItem.objects.create(**validated_data)
 
-class UserReviewSerializer(serializers.ModelSerializer):
-    username = serializers.ReadOnlyField(source='user.username')
+# class UserReviewSerializer(serializers.ModelSerializer):
+#     username = serializers.ReadOnlyField(source='user.username')
     
-    class Meta:
-        model = UserReview
-        fields = ['id', 'movie_id', 'movie_title', 'rating', 'review_text', 'username', 'created_at']
+#     class Meta:
+#         model = UserReview
+#         fields = ['id', 'movie_id', 'movie_title', 'rating', 'review_text', 'username', 'created_at']

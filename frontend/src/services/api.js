@@ -18,7 +18,23 @@ api.interceptors.request.use((config) => {
 export const login = (credentials) => api.post('token/', credentials);
 export const register = (userData) => api.post('register/', userData);
 export const searchMovies = (query) => api.get(`search/?query=${query}`);
-export const getWatchlist = () => api.get('watchlist/');
-export const addToWatchlist = (movieData) => api.post('watchlist/', movieData);
+export const getWatchlist = () => {
+    const token = localStorage.getItem('token');
+    return api.get('/watchlist/', {
+        headers: { Authorization: `Bearer ${token}` }
+    });
+};
+export const addToWatchlist = (movieData) => {
+    const token = localStorage.getItem('token'); 
+    
+    console.log("Sending token:", token);
+
+    return api.post('/watchlist/', movieData, {
+        headers: { 
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        }
+    });
+};
 
 export default api;

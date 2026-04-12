@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { searchMovies } from '../services/api';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 function MovieSearch() {
   const [query, setQuery] = useState('');
@@ -13,6 +14,28 @@ function MovieSearch() {
       setResults(response.data.results);
     } catch (err) {
       console.error("Search failed", err);
+    }
+  };
+
+  const addToWatchlist = async (e, movie) => {
+    e.preventDefault(); // Prevents the Link from triggering when clicking the button
+    try {
+      const token = localStorage.getItem('token');
+      await axios.post('http://127.0.0.1:8000/api/watchlist/', {
+        movie_id: movie.id,
+        title: movie.title,
+        poster_path: movie.poster_path,
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      alert("Added to watchlist!");
+    } catch (err) {
+      if (err.response && err.response.data) {
+        const errorMsg = err.response.data.detail || JSON.stringify(err.response.data);
+        alert(errorMsg);
+      } else {
+        alert("Could not add to watchlist. Please make sure you are logged in.");
+      }
     }
   };
 
@@ -55,6 +78,22 @@ function MovieSearch() {
               />
               <h3 style={{ fontSize: '1.1rem', margin: '10px 0' }}>{movie.title}</h3>
               <p>⭐ {movie.vote_average}</p>
+
+              {/* ADD THE BUTTON HERE */}
+              <button 
+                onClick={(e) => addToWatchlist(e, movie)}
+                style={{
+                  padding: '5px 10px',
+                  backgroundColor: '#007bff',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '4px',
+                  width: '100%',
+                  cursor: 'pointer'
+                }}
+              >
+                + Add to Watchlist
+              </button>
             </div>
           </Link>
         ))}
