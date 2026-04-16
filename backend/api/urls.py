@@ -1,5 +1,5 @@
 from django.urls import path, include
-from .views import RegisterView, search_movies, WatchlistViewSet
+from .views import RegisterView, search_movies, WatchlistViewSet, RecommendationView
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
@@ -16,4 +16,5 @@ urlpatterns = [
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('search/', search_movies, name='movie_search'),
     path('', include(router.urls)),
+    path('recommendations/', RecommendationView.as_view(), name='recommendations'),
 ]

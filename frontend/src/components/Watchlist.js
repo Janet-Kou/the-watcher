@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import Recommendations from './Recommendations';
 
 const Watchlist = () => {
   const [movies, setMovies] = useState([]);
@@ -68,12 +69,13 @@ const Watchlist = () => {
   if (loading) return <div className="text-center mt-5">Loading your movies...</div>;
 
   return (
-    <div className="container mt-4">
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <h2>My Watchlist</h2>
-        {/* FILTER DROPDOWN */}
+  <div className="container mt-4">
+    {/* CENTERED HEADER SECTION */}
+    <div className="text-center mb-5">
+      <h2 className="fw-bold">My Watchlist</h2>
+      <div className="d-flex justify-content-center mt-3">
         <select 
-          className="form-select w-25" 
+          className="form-select w-auto" 
           onChange={(e) => setFilter(e.target.value)}
         >
           <option value="all">All Movies</option>
@@ -81,43 +83,46 @@ const Watchlist = () => {
           <option value="watched">Watched</option>
         </select>
       </div>
+    </div>
 
-      {movies.length === 0 ? (
-        <p>Your watchlist is empty.</p>
-      ) : (
-        <div className="row">
-          {movies
-            .filter(item => filter === 'all' || item.status === filter) // Logic for filtering
-            .map((item) => (
-            <div key={item.id} className="col-md-3 mb-4">
-              <div className="card h-100 shadow-sm">
+    {/* MOVIES GRID */}
+    {movies.length === 0 ? (
+      <p className="text-center mt-5">Your watchlist is empty. Go search for some movies!</p>
+    ) : (
+      <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+        {movies
+          .filter(item => filter === 'all' || item.status === filter)
+          .map((item) => (
+            <div key={item.id} className="col">
+              <div className="card h-100 shadow-sm border-0">
                 <img
                   src={`https://image.tmdb.org/t/p/w500${item.poster_path}`}
                   className="card-img-top"
                   alt={item.title}
+                  style={{ height: '350px', objectFit: 'cover' }}
                 />
                 <div className="card-body">
                   <h6 className="card-title text-truncate">{item.title}</h6>
                   
-                  {/* WATCH STATUS BADGE */}
-                  <span className="badge bg-primary mb-2 d-block" style={{ textTransform: 'capitalize' }}>
+                  {/* Status Badge */}
+                  <span className="badge bg-primary mb-2 d-inline-block" style={{ textTransform: 'capitalize' }}>
                     {item.status.replace(/_/g, ' ')}
                   </span>
 
-                  {/* TOGGLE STATUS BUTTON */}
+                  {/* Toggle Button */}
                   <button 
                     onClick={() => toggleStatus(item)}
                     className="btn btn-sm w-100 mb-2"
                     style={{ 
-                        backgroundColor: item.status === 'watched' ? '#28a745' : 'transparent', 
-                        color: item.status === 'watched' ? 'white' : '#007bff',
-                        border: `1px solid ${item.status === 'watched' ? '#28a745' : '#007bff'}`
+                      backgroundColor: item.status === 'watched' ? '#28a745' : 'transparent', 
+                      color: item.status === 'watched' ? 'white' : '#007bff',
+                      border: `1px solid ${item.status === 'watched' ? '#28a745' : '#007bff'}`
                     }}
-                    >
+                  >
                     {item.status === 'watched' ? '✓ Watched' : 'Mark as Watched'}
                   </button>
 
-                  {/* RATING INPUT */}
+                  {/* Rating Input */}
                   <input 
                     type="number" 
                     min="1" max="5" 
@@ -127,7 +132,7 @@ const Watchlist = () => {
                     onBlur={(e) => updateRating(item.id, e.target.value)}
                   />
 
-                  {/* REMOVE BUTTON */}
+                  {/* Remove Link */}
                   <button 
                     onClick={() => handleDelete(item.id)}
                     className="btn btn-sm btn-link text-danger w-100"
@@ -138,9 +143,9 @@ const Watchlist = () => {
               </div>
             </div>
           ))}
-        </div>
-      )}
-    </div>
+      </div>
+    )}
+  </div>
   );
 };
 

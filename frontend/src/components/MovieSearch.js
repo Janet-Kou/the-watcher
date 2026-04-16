@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { searchMovies } from '../services/api';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import Recommendations from './Recommendations';
 
 function MovieSearch() {
   const [query, setQuery] = useState('');
@@ -40,65 +41,31 @@ function MovieSearch() {
   };
 
   return (
-    <div style={{ padding: '20px' }}>
-      <form onSubmit={handleSearch} style={{ marginBottom: '20px' }}>
-        <input 
-          type="text" 
-          placeholder="Search for a movie..." 
-          value={query} 
-          onChange={(e) => setQuery(e.target.value)} 
-          style={{ padding: '8px', width: '300px' }}
-        />
-        <button type="submit" style={{ padding: '8px 15px', marginLeft: '10px' }}>
-          Search
-        </button>
-      </form>
+  <div className="container mt-4">
+    {/* SEARCH SECTION */}
+    <form onSubmit={handleSearch} className="mb-4 d-flex justify-content-center">
+      <input 
+        type="text" 
+        className="form-control w-50"
+        placeholder="Search for a movie..." 
+        value={query} 
+        onChange={(e) => setQuery(e.target.value)} 
+      />
+      <button type="submit" className="btn btn-primary ms-2">Search</button>
+    </form>
 
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px' }}>
-        {results.map((movie) => (
-          <Link 
-            to={`/movie/${movie.id}`} 
-            key={movie.id} 
-            style={{ textDecoration: 'none', color: 'inherit' }}
-          >
-            <div style={{ 
-              width: '200px', 
-              border: '1px solid #ddd', 
-              borderRadius: '8px', 
-              padding: '10px',
-              textAlign: 'center',
-              cursor: 'pointer'
-            }}>
-              <img 
-                src={movie.poster_path 
-                  ? `https://image.tmdb.org/t/p/w200${movie.poster_path}` 
-                  : 'https://via.placeholder.com/200x300?text=No+Poster'} 
-                alt={movie.title} 
-                style={{ width: '100%', borderRadius: '4px' }} 
-              />
-              <h3 style={{ fontSize: '1.1rem', margin: '10px 0' }}>{movie.title}</h3>
-              <p>⭐ {movie.vote_average}</p>
+    {/* SMART RECOMMENDATIONS - Only show when NOT searching */}
+    {results.length === 0 && <Recommendations />}
 
-              {/* ADD THE BUTTON HERE */}
-              <button 
-                onClick={(e) => addToWatchlist(e, movie)}
-                style={{
-                  padding: '5px 10px',
-                  backgroundColor: '#007bff',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '4px',
-                  width: '100%',
-                  cursor: 'pointer'
-                }}
-              >
-                + Add to Watchlist
-              </button>
-            </div>
-          </Link>
-        ))}
-      </div>
+    {/* SEARCH RESULTS GRID */}
+    <div className="row">
+      {results.map((movie) => (
+        <div key={movie.id} className="col-6 col-md-4 col-lg-3 mb-4">
+          {/* ... your existing movie card code ... */}
+        </div>
+      ))}
     </div>
+  </div>
   );
 }
 

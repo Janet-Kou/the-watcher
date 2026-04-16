@@ -6,6 +6,7 @@ import Login from './components/Login';
 import MovieSearch from './components/MovieSearch';
 import MovieDetails from './components/MovieDetails';
 import Watchlist from './components/Watchlist';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
   return (

@@ -13,6 +13,7 @@ from .serializers import (
     UserSerializer, RegisterSerializer, 
     WatchlistItemSerializer
 )
+import random
 
 TMDB_API_KEY= "1664d90cf01e2096cc12e14b3a7a7623"
 
@@ -61,6 +62,25 @@ def search_movies(request):
     else:
         return Response({'error': 'Failed to fetch movies'}, status=500)
 
+class RecommendationView(generics.GenericAPIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        # Get all movies rated 4 or 5 stars
+        top_rated = WatchlistItem.objects.filter(
+            user=request.user, 
+            rating__gte=4
+        ).order_by('-id')
+        
+        if top_rated.exists():
+            # Send the full list of favorite movies back to the frontend
+            sources = [
+                {"title": m.title, "tmdb_id": m.movie_id} 
+                for m in top_rated
+            ]
+            return Response({"type": "personalized", "sources": sources})
+        else:
+            return Response({"type": "trending"})
 
 # @api_view(['GET', 'POST'])
 # @permission_classes([IsAuthenticated])
