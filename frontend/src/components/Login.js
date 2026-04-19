@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { login } from '../services/api';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 function Login() {
   const [credentials, setCredentials] = useState({ username: '', password: '' });
@@ -32,6 +32,8 @@ function Login() {
         <br/><br/>
         <button type="submit">Log In</button>
       </form>
+      <br/>
+      <Link to="/forgot-password">Forgot My Password</Link>
     </div>
   );
 }

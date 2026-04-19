@@ -1,5 +1,5 @@
 from django.urls import path, include
-from .views import RegisterView, search_movies, WatchlistViewSet, RecommendationView
+from .views import RegisterView, search_movies, WatchlistViewSet, RecommendationView, PasswordResetRequestView, PasswordResetConfirmView
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
@@ -17,4 +17,6 @@ urlpatterns = [
     path('search/', search_movies, name='movie_search'),
     path('', include(router.urls)),
     path('recommendations/', RecommendationView.as_view(), name='recommendations'),
+    path('password-reset/', PasswordResetRequestView.as_view(), name='password_reset'),
+    path('password-reset-confirm/', PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
 ]

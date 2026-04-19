@@ -37,4 +37,7 @@ export const addToWatchlist = (movieData) => {
     });
 };
 
+export const requestPasswordReset = (email) => api.post('password-reset/', { email });
+export const confirmPasswordReset = (uid, token, new_password) => api.post('password-reset-confirm/', { uid, token, new_password });
+
 export default api;

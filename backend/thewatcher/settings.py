@@ -104,6 +104,10 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# Email settings (console backend prints emails to terminal)
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+DEFAULT_FROM_EMAIL = 'noreply@thewatcher.com'
+
 # CORS settings (for React frontend)
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",  # React default port

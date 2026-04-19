@@ -6,6 +6,8 @@ import Login from './components/Login';
 import MovieSearch from './components/MovieSearch';
 import MovieDetails from './components/MovieDetails';
 import Watchlist from './components/Watchlist';
+import ForgotPassword from './components/ForgotPassword';
+import ResetPassword from './components/ResetPassword';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
@@ -29,6 +31,8 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/" element={<MovieSearch />} />
             <Route path="/movie/:id" element={<MovieDetails />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password/:uid/:token" element={<ResetPassword />} />
           </Routes>
         </div>
       </div>
