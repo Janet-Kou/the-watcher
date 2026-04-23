@@ -18,6 +18,9 @@ api.interceptors.request.use((config) => {
 export const login = (credentials) => api.post('token/', credentials);
 export const register = (userData) => api.post('register/', userData);
 export const searchMovies = (query) => api.get(`search/?query=${query}`);
+export const getTrendingMovies = () => api.get('movies/trending/');
+export const getSuggestedMovies = () => api.get('movies/suggested/');
+export const getCatalogMovies = () => api.get('catalog/');
 export const getWatchlist = () => {
     const token = localStorage.getItem('token');
     return api.get('/watchlist/', {

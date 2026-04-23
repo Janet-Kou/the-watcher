@@ -1,0 +1,4 @@
+tmdb_id,title,overview,release_date,poster_path,backdrop_path,vote_average,vote_count,popularity,revenue,runtime,genres
+550,Fight Club,A depressed man ... who meets a strange soap salesman.,1999-10-15,/a26cQPRhJPX6GbWfQbvZdrrp9j9.jpg,/8uO0gUM8aNqYLs1OsTBQiXu0fEv.jpg,8.4,34314,70.0,100853753,139,Drama|Thriller
+24428,The Avengers,Earth's mightiest heroes must come together ...,2012-04-25,/RYMX2wcKCBAr24UyPD7xwmjaTn.jpg,/hbn46fQaRmlpBuUrEiFqv0GDL6Y.jpg,7.7,26854,60.0,1518812988,143,Action|Adventure|Science Fiction
+27205,Inception,A thief who steals corporate secrets using dream-sharing technology.,2010-07-15,/qmDpIHrmpJINaRKAfWQfftjCdyi.jpg,/s3TBrRGB1iav7gFOCNx3H31MoES.jpg,8.3,32766,80.0,825532764,148,Action|Science Fiction|Adventure

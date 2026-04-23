@@ -12,10 +12,10 @@ from django.db.models import Avg
 from django.conf import settings
 import requests
 import os
-from .models import WatchlistItem
+from .models import WatchlistItem, Movie
 from .serializers import (
     UserSerializer, RegisterSerializer, 
-    WatchlistItemSerializer
+    WatchlistItemSerializer, MovieSerializer
 )
 import random
 
@@ -55,16 +55,54 @@ def search_movies(request):
     
     if not query:
         return Response({'error': 'Search query required'}, status=400)
-    
-    tmdb_key = os.getenv('TMDB_API_KEY')
 
-    url = f"https://api.themoviedb.org/3/search/movie?api_key={'1664d90cf01e2096cc12e14b3a7a7623'}&query={query}"
+    movies = Movie.objects.filter(title__icontains=query)[:50]
+    if movies.exists():
+        serializer = MovieSerializer(movies, many=True)
+        return Response({'results': serializer.data})
+
+    tmdb_key = os.getenv('TMDB_API_KEY') or TMDB_API_KEY
+    url = f"https://api.themoviedb.org/3/search/movie?api_key={tmdb_key}&query={query}"
     response = requests.get(url)
     
     if response.status_code == 200:
         return Response(response.json())
     else:
         return Response({'error': 'Failed to fetch movies'}, status=500)
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def trending_movies(request):
+    movies = Movie.objects.order_by('-popularity')[:12]
+    serializer = MovieSerializer(movies, many=True)
+    return Response({'results': serializer.data})
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def suggested_movies(request):
+    if request.user.is_authenticated:
+        watched_ids = WatchlistItem.objects.filter(user=request.user).values_list('movie_id', flat=True)
+        if watched_ids:
+            movies = Movie.objects.exclude(tmdb_id__in=watched_ids).order_by('-revenue')[:12]
+            serializer = MovieSerializer(movies, many=True)
+            return Response({'results': serializer.data})
+
+    movies = Movie.objects.order_by('-revenue')[:12]
+    serializer = MovieSerializer(movies, many=True)
+    return Response({'results': serializer.data})
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def catalog_movies(request):
+    """Fetch popular movies from TMDB API"""
+    tmdb_key = os.getenv('TMDB_API_KEY') or TMDB_API_KEY
+    url = f"https://api.themoviedb.org/3/movie/popular?api_key={tmdb_key}&language=en-US&page=1"
+    response = requests.get(url)
+
+    if response.status_code == 200:
+        return Response(response.json())
+    else:
+        return Response({'error': 'Failed to fetch catalog movies'}, status=500)
 
 class RecommendationView(generics.GenericAPIView):
     permission_classes = [IsAuthenticated]
