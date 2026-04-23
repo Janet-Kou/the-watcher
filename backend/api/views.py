@@ -1,5 +1,5 @@
 from rest_framework import generics, permissions, status, viewsets
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.exceptions import ValidationError
@@ -49,6 +49,7 @@ class WatchlistViewSet(viewsets.ModelViewSet):
         serializer.save(user=self.request.user)
 @api_view(['GET'])
 @permission_classes([AllowAny])
+@authentication_classes([])
 def search_movies(request):
     """Search movies from TMDB API"""
     query = request.query_params.get('query')
@@ -57,21 +58,12 @@ def search_movies(request):
         return Response({'error': 'Search query required'}, status=400)
 
     movies = Movie.objects.filter(title__icontains=query)[:50]
-    if movies.exists():
-        serializer = MovieSerializer(movies, many=True)
-        return Response({'results': serializer.data})
-
-    tmdb_key = os.getenv('TMDB_API_KEY') or TMDB_API_KEY
-    url = f"https://api.themoviedb.org/3/search/movie?api_key={tmdb_key}&query={query}"
-    response = requests.get(url)
-    
-    if response.status_code == 200:
-        return Response(response.json())
-    else:
-        return Response({'error': 'Failed to fetch movies'}, status=500)
+    serializer = MovieSerializer(movies, many=True)
+    return Response({'results': serializer.data})
 
 @api_view(['GET'])
 @permission_classes([AllowAny])
+@authentication_classes([])
 def trending_movies(request):
     movies = Movie.objects.order_by('-popularity')[:12]
     serializer = MovieSerializer(movies, many=True)
@@ -79,6 +71,7 @@ def trending_movies(request):
 
 @api_view(['GET'])
 @permission_classes([AllowAny])
+@authentication_classes([])
 def suggested_movies(request):
     if request.user.is_authenticated:
         watched_ids = WatchlistItem.objects.filter(user=request.user).values_list('movie_id', flat=True)

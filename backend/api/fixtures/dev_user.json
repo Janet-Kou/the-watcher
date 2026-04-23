@@ -1,0 +1,20 @@
+[
+{
+  "model": "auth.user",
+  "pk": 2,
+  "fields": {
+    "password": "pbkdf2_sha256$600000$PDZSQFobR4YTxgEy37fDY5$Uvl6ihEhjcflq5n7NK3jodkFQ1N4cfiDXVl4h2cP298=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "devuser",
+    "first_name": "Dev",
+    "last_name": "User",
+    "email": "dev@thewatcher.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-04-23T05:49:43.330Z",
+    "groups": [],
+    "user_permissions": []
+  }
+}
+]
