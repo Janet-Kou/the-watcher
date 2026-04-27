@@ -42,8 +42,30 @@ class Command(BaseCommand):
                 data = response.json()
 
                 for movie in data.get('results', []):
+                    tmdb_id = movie.get('id')
+                    # Fetch credits for director and actors
+                    director = ''
+                    actors = ''
+                    try:
+                        credits_url = f'https://api.themoviedb.org/3/movie/{tmdb_id}/credits'
+                        credits_params = {'api_key': api_key}
+                        credits_resp = requests.get(credits_url, params=credits_params, timeout=10)
+                        credits_resp.raise_for_status()
+                        credits = credits_resp.json()
+                        # Director
+                        crew = credits.get('crew', [])
+                        for member in crew:
+                            if member.get('job') == 'Director':
+                                director = member.get('name', '')
+                                break
+                        # Top 5 actors
+                        cast = credits.get('cast', [])
+                        actors = ', '.join([c.get('name', '') for c in cast[:5]])
+                    except Exception as e:
+                        self.stdout.write(self.style.WARNING(f'Error fetching credits for movie {tmdb_id}: {e}'))
+
                     movies.append({
-                        'tmdb_id': movie.get('id'),
+                        'tmdb_id': tmdb_id,
                         'title': movie.get('title', ''),
                         'overview': movie.get('overview', ''),
                         'release_date': movie.get('release_date', ''),
@@ -55,6 +77,8 @@ class Command(BaseCommand):
                         'revenue': movie.get('revenue', ''),
                         'runtime': movie.get('runtime', ''),
                         'genres': ','.join([g.get('name', '') for g in movie.get('genres', [])]) if isinstance(movie.get('genres'), list) else '',
+                        'director': director,
+                        'actors': actors,
                     })
             except requests.RequestException as e:
                 self.stdout.write(self.style.WARNING(f'Error fetching page {page}: {e}'))
@@ -68,7 +92,7 @@ class Command(BaseCommand):
             with open(output_file, 'w', newline='', encoding='utf-8') as f:
                 writer = csv.DictWriter(f, fieldnames=[
                     'tmdb_id', 'title', 'overview', 'release_date', 'poster_path',
-                    'backdrop_path', 'vote_average', 'vote_count', 'popularity', 'revenue', 'runtime', 'genres'
+                    'backdrop_path', 'vote_average', 'vote_count', 'popularity', 'revenue', 'runtime', 'genres', 'director', 'actors'
                 ])
                 writer.writeheader()
                 writer.writerows(movies)
@@ -103,6 +127,8 @@ class Command(BaseCommand):
                         'revenue': int(row['revenue']) if row['revenue'] else None,
                         'runtime': int(row['runtime']) if row['runtime'] else None,
                         'genres': (row['genres'] or '').strip() or None,
+                        'director': (row['director'] or '').strip() or None,
+                        'actors': (row['actors'] or '').strip() or None,
                     }
                 )
                 count += 1

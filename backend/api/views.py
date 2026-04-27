@@ -53,11 +53,35 @@ class WatchlistViewSet(viewsets.ModelViewSet):
 def search_movies(request):
     """Search movies from TMDB API"""
     query = request.query_params.get('query')
-    
+    genre = request.query_params.get('genre')
+    director = request.query_params.get('director')
+    actor = request.query_params.get('actor')
+    min_runtime = request.query_params.get('min_runtime')
+    max_runtime = request.query_params.get('max_runtime')
+    min_rating = request.query_params.get('min_rating')
+    max_rating = request.query_params.get('max_rating')
+
     if not query:
         return Response({'error': 'Search query required'}, status=400)
 
-    movies = Movie.objects.filter(title__icontains=query)[:50]
+    movies = Movie.objects.filter(title__icontains=query)
+
+    if genre:
+        movies = movies.filter(genres__icontains=genre)
+    if director:
+        movies = movies.filter(director__icontains=director)
+    if actor:
+        movies = movies.filter(actors__icontains=actor)
+    if min_runtime:
+        movies = movies.filter(runtime__gte=min_runtime)
+    if max_runtime:
+        movies = movies.filter(runtime__lte=max_runtime)
+    if min_rating:
+        movies = movies.filter(vote_average__gte=min_rating)
+    if max_rating:
+        movies = movies.filter(vote_average__lte=max_rating)
+
+    movies = movies[:50]
     serializer = MovieSerializer(movies, many=True)
     return Response({'results': serializer.data})
 

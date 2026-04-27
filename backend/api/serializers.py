@@ -42,7 +42,7 @@ class MovieSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'tmdb_id', 'title', 'overview', 'release_date', 'poster_path',
             'backdrop_path', 'vote_average', 'vote_count', 'popularity', 'revenue',
-            'runtime', 'genres'
+            'runtime', 'genres', 'director', 'actors'
         ]
 
 # class UserReviewSerializer(serializers.ModelSerializer):

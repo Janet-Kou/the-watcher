@@ -14,6 +14,8 @@ class Movie(models.Model):
     revenue = models.BigIntegerField(null=True, blank=True)
     runtime = models.IntegerField(null=True, blank=True)
     genres = models.CharField(max_length=255, null=True, blank=True)
+    director = models.CharField(max_length=255, null=True, blank=True)
+    actors = models.CharField(max_length=512, null=True, blank=True)  # Comma-separated actor names
 
     class Meta:
         ordering = ['-revenue', '-popularity']
