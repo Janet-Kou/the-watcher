@@ -38,7 +38,8 @@ const MovieSearch = () => {
 
   const handleSearch = async (e) => {
     e.preventDefault();
-    if (!query.trim()) {
+    // Only run search if at least one field is filled
+    if (!query.trim() && !genre && !director && !actor && !minRuntime && !maxRuntime && !minRating && !maxRating) {
       setResults([]);
       return;
     }
@@ -49,7 +50,7 @@ const MovieSearch = () => {
     try {
       // Build query params
       const params = new URLSearchParams();
-      params.append('query', query);
+      if (query.trim()) params.append('query', query);
       if (genre) params.append('genre', genre);
       if (director) params.append('director', director);
       if (actor) params.append('actor', actor);
@@ -223,7 +224,7 @@ const MovieSearch = () => {
 
       {error && <div className="alert alert-danger">{error}</div>}
 
-      {query.trim() ? (
+      {(query.trim() || genre || director || actor || minRuntime || maxRuntime || minRating || maxRating) ? (
         <>
           {loading && <div className="text-center text-muted">Searching...</div>}
           {!loading && results.length === 0 && <div className="text-center text-muted">No movies found for "{query}".</div>}
