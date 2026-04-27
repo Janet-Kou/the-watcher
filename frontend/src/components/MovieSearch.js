@@ -3,6 +3,7 @@ import { searchMovies, getTrendingMovies, getSuggestedMovies } from '../services
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
+const MovieSearch = () => {
   const [query, setQuery] = useState('');
   const [genre, setGenre] = useState('');
   const [director, setDirector] = useState('');
@@ -257,6 +258,6 @@ import axios from 'axios';
       )}
     </div>
   );
-}
+};
 
 export default MovieSearch;
