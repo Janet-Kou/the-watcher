@@ -29,9 +29,8 @@ This project is developed as part of the **SSW/CS Agile Methods for Software Dev
 
 | Category | Technology |
 |----------|------------|
-| Frontend | [To be determined] |
-| Backend | [To be determined] |
-| Database | [To be determined] |
+| Frontend | JavaScript |
+| Backend | Python |
 | Version Control | Git & GitHub |
 | Project Management | GitHub Projects |
 
