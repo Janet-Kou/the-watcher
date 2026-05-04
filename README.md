@@ -60,18 +60,35 @@ the-watcher/
 └── README.md          # Project overview
 ```
 
-### Prerequisites
-
-- [To be added once tech stack is finalized]
 
 ### Installation
 
-```bash
-# Clone the repository
+bash
+** Clone the repository
 git clone https://github.com/[your-org]/the-watcher.git
 
-# Navigate to project directory
+** Navigate to project directory
 cd the-watcher
 
-# Installation steps will be added as development progresses
-```
+** Set up Movie API
+Go to https://www.themoviedb.org/settings/api
+Click Create → choose Developer
+Fill out the form (app name: "the-watcher", personal use, website name: http://localhost:3000, etc)
+Copy the API Key (v3 auth)
+nano backend/.env
+    TMDB_API_KEY=[paste_key]
+    SECRET_KEY=[any_string]
+Ctrl+X --> Y --> enter
+python manage.py fetch_tmdb_movies
+python manage.py import_movies api/data/top_grossing_movies_sample.csv
+
+** Ensure npm is installed
+npm -v
+
+** Start backend
+cd the-watcher/backend
+source venv/bin/activate
+python manage.py runserver
+
+** Start frontend (in separate terminal)
+npm start
