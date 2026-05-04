@@ -62,7 +62,7 @@ the-watcher/
 
 
 ### Installation
-
+```
 bash
 ** Clone the repository
 git clone https://github.com/[your-org]/the-watcher.git
@@ -92,3 +92,4 @@ python manage.py runserver
 
 ** Start frontend (in separate terminal)
 npm start
+```
