@@ -61,10 +61,10 @@ def search_movies(request):
     min_rating = request.query_params.get('min_rating')
     max_rating = request.query_params.get('max_rating')
 
-    if not query:
-        return Response({'error': 'Search query required'}, status=400)
+    movies = Movie.objects.all()
 
-    movies = Movie.objects.filter(title__icontains=query)
+    if query:
+        movies = movies.filter(title__icontains=query)
 
     if genre:
         movies = movies.filter(genres__icontains=genre)
@@ -147,7 +147,9 @@ class PasswordResetRequestView(generics.GenericAPIView):
     def post(self, request):
         email = request.data.get('email', '').strip()
         try:
-            user = User.objects.get(email__iexact=email)
+            user = User.objects.filter(email__iexact=email).first()
+            if user is None:
+                raise User.DoesNotExist
             uid = urlsafe_base64_encode(force_bytes(user.pk))
             token = default_token_generator.make_token(user)
             reset_link = f"http://localhost:3000/reset-password/{uid}/{token}"
